@@ -1,0 +1,6 @@
+description = 'jpa'
+
+dependencies {
+    provided lib.spring_data_jpa
+    provided lib.jpa_api
+}

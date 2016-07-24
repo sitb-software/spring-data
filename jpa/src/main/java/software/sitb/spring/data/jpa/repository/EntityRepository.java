@@ -1,0 +1,186 @@
+package software.sitb.spring.data.jpa.repository;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import software.sitb.spring.data.jpa.entity.AbstractEntity;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 公共数据查询仓库
+ *
+ * @author 田尘殇
+ *         date 2015/5/22
+ *         time 13:18
+ */
+public interface EntityRepository {
+
+
+    /**
+     * 通过ID 查询数据
+     *
+     * @param domainClass 表实体类Class
+     * @param id          id 值
+     * @param <T>         实际表类型
+     * @return 查询的结果
+     */
+    <T extends AbstractEntity> T findOne(Class<T> domainClass, Long id);
+
+    <T extends AbstractEntity> T findOne(Class<T> domainCLass, Specification<T> specification);
+
+    /**
+     * 随机查询一条数据
+     *
+     * @param domainClass   表实体Class
+     * @param specification 条件
+     * @param <T>           表类型
+     * @return 随机数据
+     */
+    <T extends AbstractEntity> T findOneWithRandom(Class<T> domainClass, Specification<T> specification);
+
+    /**
+     * 保存数据
+     *
+     * @param entity 数据表
+     */
+    <T extends AbstractEntity> void save(T entity);
+
+    <T extends AbstractEntity> void save(T[] entities);
+
+    /**
+     * 保存数据
+     *
+     * @param entities 数据表
+     */
+    <T extends AbstractEntity> void save(Collection<T> entities);
+
+    <T extends AbstractEntity> T update(T entity);
+
+    <T extends AbstractEntity> T[] update(T[] entities);
+
+    <T extends AbstractEntity> Collection<T> update(Collection<T> entities);
+
+    /**
+     * 通过id删除数据
+     *
+     * @param id id
+     */
+    <T extends AbstractEntity> void delete(Class<T> domainClass, Long id);
+
+    /**
+     * 删除数据
+     *
+     * @param entities 数据表
+     */
+    void delete(AbstractEntity... entities);
+
+    /**
+     * 删除数据
+     *
+     * @param entities 数据表
+     */
+    <T extends AbstractEntity> void delete(Collection<T> entities);
+
+    <T extends AbstractEntity> void delete(Class<T> domainClass, Specification<T> specification);
+
+    /**
+     * 根据传入的JPQL语句查询数据
+     *
+     * @param jpql   jpql
+     * @param params 参数
+     * @param <T>    结果类型
+     * @return 查询结果
+     */
+    <T> List<T> query(String jpql, Object... params);
+
+    /**
+     * 根据传入的JPQL语句查询数据
+     *
+     * @param jpql   jpql
+     * @param params 参数
+     * @param <T>    实体
+     * @return 查询结果
+     */
+    <T> List<T> query(String jpql, Map<String, Object> params);
+
+    /**
+     * 根据传入的JPQL 语句执行查询,返回第一条记录
+     *
+     * @param jpql   jpql
+     * @param params 查询参数
+     * @param <T>    查询结果类型
+     * @return 查询结果
+     */
+    <T> T queryOne(String jpql, Object... params);
+
+    /**
+     * 根据传入的JPQL 语句执行查询,返回第一条记录
+     *
+     * @param jpql   jpql
+     * @param params 查询参数
+     * @param <T>    查询结果类型
+     * @return 查询结果
+     */
+    <T> T queryOne(String jpql, Map<String, Object> params);
+
+    /**
+     * 根据传入的JPQL语句查询数据
+     *
+     * @param select   jpql语句select部分
+     * @param from     jpql 语句 from到结束部分
+     * @param pageable 分页信息
+     * @param params   参数
+     * @return 分页查询结果
+     */
+    <T> Page<T> query(String select, String from, Pageable pageable, Object... params);
+
+    /**
+     * 根据传入的JPQL语句查询数据
+     *
+     * @param select   jpql语句select部分
+     * @param from     jpql 语句 from部分
+     * @param pageable 分页信息
+     * @param params   参数
+     * @return 分页查询结果
+     */
+    <T> Page<T> query(String select, String from, Pageable pageable, Map<String, Object> params);
+
+    <T> Long countQuery(Class<T> domainClass);
+
+    <T> Long countQuery(Class<T> domainClass, Specification<T> specification);
+
+    <T> List<T> findAll(Class<T> domainClass);
+
+    <T> List<T> findAll(Class<T> domainClass, Specification<T> specification);
+
+    <T> List<T> findAll(Class<T> domainClass, Specification<T> spec, Sort sort);
+
+    <T> Page<T> findAll(Class<T> domainClass, Specification<T> spec, Pageable pageable);
+
+    int executeUpdate(String updateJpql, Object... params);
+
+    int executeUpdateInBatch(String updateJpql, Object... params);
+
+    int executeUpdate(String updateJpql, Map<String, Object> params);
+
+    /**
+     * 判断数据是否存在
+     *
+     * @param domainClass   实体class
+     * @param specification 查询条件
+     * @param <T>           表类型
+     * @return 数据存在返回true, 不存在返回false
+     */
+    <T extends AbstractEntity> boolean exists(Class<T> domainClass, Specification<T> specification);
+
+    /**
+     * 获取原生对象
+     *
+     * @return native
+     */
+    Object getNative();
+}

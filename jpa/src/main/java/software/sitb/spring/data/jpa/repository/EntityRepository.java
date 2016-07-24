@@ -4,7 +4,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import software.sitb.spring.data.jpa.entity.AbstractEntity;
 
 import java.util.Collection;
 import java.util.List;
@@ -28,9 +27,9 @@ public interface EntityRepository {
      * @param <T>         实际表类型
      * @return 查询的结果
      */
-    <T extends AbstractEntity> T findOne(Class<T> domainClass, Long id);
+    <T> T findOne(Class<T> domainClass, Long id);
 
-    <T extends AbstractEntity> T findOne(Class<T> domainCLass, Specification<T> specification);
+    <T> T findOne(Class<T> domainCLass, Specification<T> specification);
 
     /**
      * 随机查询一条数据
@@ -40,52 +39,52 @@ public interface EntityRepository {
      * @param <T>           表类型
      * @return 随机数据
      */
-    <T extends AbstractEntity> T findOneWithRandom(Class<T> domainClass, Specification<T> specification);
+    <T> T findOneWithRandom(Class<T> domainClass, Specification<T> specification);
 
     /**
      * 保存数据
      *
      * @param entity 数据表
      */
-    <T extends AbstractEntity> void save(T entity);
+    <T> void save(T entity);
 
-    <T extends AbstractEntity> void save(T[] entities);
+    <T> void save(T[] entities);
 
     /**
      * 保存数据
      *
      * @param entities 数据表
      */
-    <T extends AbstractEntity> void save(Collection<T> entities);
+    <T> void save(Collection<T> entities);
 
-    <T extends AbstractEntity> T update(T entity);
+    <T> T update(T entity);
 
-    <T extends AbstractEntity> T[] update(T[] entities);
+    <T> T[] update(T[] entities);
 
-    <T extends AbstractEntity> Collection<T> update(Collection<T> entities);
+    <T> Collection<T> update(Collection<T> entities);
 
     /**
      * 通过id删除数据
      *
      * @param id id
      */
-    <T extends AbstractEntity> void delete(Class<T> domainClass, Long id);
+    <T> void delete(Class<T> domainClass, Long id);
 
     /**
      * 删除数据
      *
      * @param entities 数据表
      */
-    void delete(AbstractEntity... entities);
+    <T> void delete(T[] entities);
 
     /**
      * 删除数据
      *
      * @param entities 数据表
      */
-    <T extends AbstractEntity> void delete(Collection<T> entities);
+    <T> void delete(Collection<T> entities);
 
-    <T extends AbstractEntity> void delete(Class<T> domainClass, Specification<T> specification);
+    <T> void delete(Class<T> domainClass, Specification<T> specification);
 
     /**
      * 根据传入的JPQL语句查询数据
@@ -175,7 +174,7 @@ public interface EntityRepository {
      * @param <T>           表类型
      * @return 数据存在返回true, 不存在返回false
      */
-    <T extends AbstractEntity> boolean exists(Class<T> domainClass, Specification<T> specification);
+    <T> boolean exists(Class<T> domainClass, Specification<T> specification);
 
     /**
      * 获取原生对象

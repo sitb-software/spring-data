@@ -1,6 +1,5 @@
 package software.sitb.spring.data.jpa.repository;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -9,7 +8,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import software.sitb.spring.data.jpa.entity.AbstractEntity;
 
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -62,12 +60,12 @@ public class EntityRepositoryImpl implements EntityRepository {
      * @return 查询的结果
      */
     @Override
-    public <T extends AbstractEntity> T findOne(Class<T> domainClass, Long id) {
+    public <T> T findOne(Class<T> domainClass, Long id) {
         return entityManager.find(domainClass, id);
     }
 
     @Override
-    public <T extends AbstractEntity> T findOne(Class<T> domainCLass, Specification<T> specification) {
+    public <T> T findOne(Class<T> domainCLass, Specification<T> specification) {
         try {
             return getQuery(domainCLass, specification, (Sort) null).getSingleResult();
         } catch (NoResultException e) {
@@ -76,7 +74,7 @@ public class EntityRepositoryImpl implements EntityRepository {
     }
 
     @Override
-    public <T extends AbstractEntity> T findOneWithRandom(Class<T> domainClass, Specification<T> specification) {
+    public <T> T findOneWithRandom(Class<T> domainClass, Specification<T> specification) {
         long count = countQuery(domainClass, specification);
         if (count == 0)
             return null;
@@ -90,12 +88,12 @@ public class EntityRepositoryImpl implements EntityRepository {
 
     @Override
     @Transactional
-    public <T extends AbstractEntity> void save(T entity) {
+    public <T> void save(T entity) {
         entityManager.persist(entity);
     }
 
     @Override
-    public <T extends AbstractEntity> void save(T[] entities) {
+    public <T> void save(T[] entities) {
         save(Arrays.asList(entities));
     }
 
@@ -106,37 +104,37 @@ public class EntityRepositoryImpl implements EntityRepository {
      */
     @Override
     @Transactional
-    public <T extends AbstractEntity> void save(Collection<T> entities) {
+    public <T> void save(Collection<T> entities) {
         entities.forEach(entity -> entityManager.persist(entity));
     }
 
     @Override
-    public <T extends AbstractEntity> T update(T entity) {
+    public <T> T update(T entity) {
         return entityManager.merge(entity);
     }
 
     @Override
-    public <T extends AbstractEntity> T[] update(T[] entities) {
+    public <T> T[] update(T[] entities) {
         return (T[]) update(Arrays.asList(entities)).toArray();
     }
 
     @Override
-    public <T extends AbstractEntity> Collection<T> update(Collection<T> entities) {
+    public <T> Collection<T> update(Collection<T> entities) {
         return entities.stream().map(entity -> entityManager.merge(entity)).collect(Collectors.toList());
     }
 
     @Override
     @Transactional
-    public <T extends AbstractEntity> void delete(Class<T> domainClass, Long id) {
+    public <T> void delete(Class<T> domainClass, Long id) {
         Assert.notNull(id, "id 不能为null");
 
-        AbstractEntity entity = findOne(domainClass, id);
+        T entity = findOne(domainClass, id);
 
         if (entity == null) {
-            throw new EmptyResultDataAccessException("要删除的数据不存在", 1);
+            return;
         }
 
-        delete(entity);
+        delete(Collections.singletonList(entity));
     }
 
     /**
@@ -146,7 +144,7 @@ public class EntityRepositoryImpl implements EntityRepository {
      */
     @Override
     @Transactional
-    public void delete(AbstractEntity... entities) {
+    public <T> void delete(T[] entities) {
         delete(Arrays.asList(entities));
     }
 
@@ -157,14 +155,14 @@ public class EntityRepositoryImpl implements EntityRepository {
      */
     @Override
     @Transactional
-    public <T extends AbstractEntity> void delete(Collection<T> entities) {
+    public <T> void delete(Collection<T> entities) {
         for (T entity : entities) {
             this.entityManager.remove(this.entityManager.contains(entity) ? entity : this.entityManager.merge(entity));
         }
     }
 
     @Override
-    public <T extends AbstractEntity> void delete(Class<T> domainClass, Specification<T> specification) {
+    public <T> void delete(Class<T> domainClass, Specification<T> specification) {
         delete(findAll(domainClass, specification));
     }
 
@@ -314,7 +312,7 @@ public class EntityRepositoryImpl implements EntityRepository {
     }
 
     @Override
-    public <T extends AbstractEntity> boolean exists(Class<T> domainClass, Specification<T> specification) {
+    public <T> boolean exists(Class<T> domainClass, Specification<T> specification) {
         Long count = countQuery(domainClass, specification);
         return null != count && count > 0;
     }

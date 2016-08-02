@@ -1,0 +1,5 @@
+description = 'commons'
+
+dependencies {
+    provided lib.spring_data_commons
+}

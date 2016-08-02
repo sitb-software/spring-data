@@ -1,4 +1,4 @@
-rootProject.name = 'spring'
+rootProject.name = 'spring-data'
 
 include ':commons'
 include ':jpa'

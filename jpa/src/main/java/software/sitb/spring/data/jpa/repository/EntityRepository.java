@@ -70,6 +70,8 @@ public interface EntityRepository {
      */
     <T> void delete(Class<T> domainClass, Long id);
 
+    <T> void delete(T entity);
+
     /**
      * 删除数据
      *

@@ -93,6 +93,7 @@ public class EntityRepositoryImpl implements EntityRepository {
     }
 
     @Override
+    @Transactional
     public <T> void save(T[] entities) {
         save(Arrays.asList(entities));
     }
@@ -109,16 +110,19 @@ public class EntityRepositoryImpl implements EntityRepository {
     }
 
     @Override
+    @Transactional
     public <T> T update(T entity) {
         return entityManager.merge(entity);
     }
 
     @Override
+    @Transactional
     public <T> T[] update(T[] entities) {
         return (T[]) update(Arrays.asList(entities)).toArray();
     }
 
     @Override
+    @Transactional
     public <T> Collection<T> update(Collection<T> entities) {
         return entities.stream().map(entity -> entityManager.merge(entity)).collect(Collectors.toList());
     }
@@ -134,6 +138,11 @@ public class EntityRepositoryImpl implements EntityRepository {
             return;
         }
 
+        delete(entity);
+    }
+
+    @Override
+    public <T> void delete(T entity) {
         delete(Collections.singletonList(entity));
     }
 
@@ -162,6 +171,7 @@ public class EntityRepositoryImpl implements EntityRepository {
     }
 
     @Override
+    @Transactional
     public <T> void delete(Class<T> domainClass, Specification<T> specification) {
         delete(findAll(domainClass, specification));
     }
@@ -241,7 +251,7 @@ public class EntityRepositoryImpl implements EntityRepository {
      */
     @Override
     public <T> Page<T> query(String select, String from, Pageable pageable, Object... params) {
-        Query query = entityManager.createQuery(select + from);
+        Query query = entityManager.createQuery(select + " " + from);
         setQueryParams(query, params);
 
         return null == pageable ? new PageImpl<>(query.getResultList()) : readPage(from, query, pageable, params);
@@ -298,7 +308,6 @@ public class EntityRepositoryImpl implements EntityRepository {
         return query.executeUpdate();
     }
 
-    //    @javax.transaction.Transactional(value = javax.transaction.Transactional.TxType.REQUIRES_NEW)
     @Override
     public int executeUpdateInBatch(String updateJpql, Object... params) {
         return executeUpdate(updateJpql, params);
@@ -322,7 +331,7 @@ public class EntityRepositoryImpl implements EntityRepository {
         return getQuery(domainClass, spec, sort).getResultList();
     }
 
-    private <T> Page<T> readPage(String from, Query query, Pageable pageable, Object params) {
+    private <T> Page<T> readPage(String from, Query query, Pageable pageable, Object... params) {
         Long total = executeCountQuery(getCountQuery(from, params));
         return executeReadPage(query, pageable, total);
     }
@@ -342,7 +351,7 @@ public class EntityRepositoryImpl implements EntityRepository {
         return new PageImpl<>(content, pageable, total);
     }
 
-    private TypedQuery<Long> getCountQuery(String from, Object params) {
+    private TypedQuery<Long> getCountQuery(String from, Object... params) {
         TypedQuery<Long> query = entityManager.createQuery(COUNT_SELECT + from, Long.class);
         setQueryParams(query, params);
         return query;

@@ -1,6 +1,6 @@
 allprojects {
     group 'software.sitb.spring.data'
-    version '1.0.0.RELEASE'
+    version '1.0.1.RELEASE'
 
     repositories {
         maven { url "http://repo.sitb.software/content/groups/public" }

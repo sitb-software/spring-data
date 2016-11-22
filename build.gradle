@@ -1,33 +1,30 @@
-allprojects {
-    group 'software.sitb.spring.data'
-    version '1.0.1.RELEASE'
-
-    repositories {
-        maven { url "http://repo.sitb.software/content/groups/public" }
-    }
-
-}
 apply from: 'libraries.gradle'
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.13'
-    distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
+allprojects {
+    group 'software.sitb.spring.data'
+    version '1.0.2.RELEASE'
+
+    repositories {
+        maven { url "${repoUrl}" }
+    }
+
 }
 
-
-buildscript {
-    repositories {
-        maven { url "http://repo.sitb.software/content/groups/public" }
-    }
-    dependencies {
-        classpath 'com.novoda:bintray-release:0.3.5'
-    }
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.1'
+    distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }
 
 subprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
     apply plugin: 'maven-publish'
+
+    buildscript {
+        repositories {
+            maven { url "${repoUrl}" }
+        }
+    }
 
     [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 

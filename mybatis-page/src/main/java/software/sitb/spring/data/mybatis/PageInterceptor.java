@@ -1,5 +1,6 @@
 package software.sitb.spring.data.mybatis;
 
+import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import software.sitb.spring.data.mybatis.dialect.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -43,27 +45,14 @@ public class PageInterceptor implements Interceptor {
         for (Object arg : args) {
             if (arg instanceof Pageable) {
                 LOGGER.debug("发现Spring分页参数,执行分页查询.");
-                Pageable pageable = (Pageable) arg;
-                MappedStatement ms = (MappedStatement) args[0];
-                final Object parameter = args[1];
-                final BoundSql boundSql = ms.getBoundSql(parameter);
-                String sql = boundSql.getSql().trim().replaceAll(";$", "");
-
-                Long total = executeCountQuery(sql, ms, boundSql);
-
-                // 获取分页SQL，并完成参数准备
-                String limitSql = dialect.getLimitString(sql, pageable.getOffset(), pageable.getPageSize());
-                args[2] = RowBounds.DEFAULT;
-                args[0] = copyFromNewSql(ms, boundSql, limitSql);
-
-                Object result = invocation.proceed();
-
-                Page<?> page = new PageImpl<>((List<?>) result, pageable, total);
-
-                List<Page<?>> tmp = new ArrayList<>(1);
-                tmp.add(page);
-
-                return tmp;
+                return processing((Pageable) arg, invocation);
+            } else if (arg instanceof MapperMethod.ParamMap) {
+                MapperMethod.ParamMap params = (MapperMethod.ParamMap) arg;
+                for (Object key : params.keySet()) {
+                    if (params.get(key) instanceof Pageable) {
+                        return processing((Pageable) params.get(key), invocation);
+                    }
+                }
             }
         }
 
@@ -109,6 +98,30 @@ public class PageInterceptor implements Interceptor {
             case SYBASE:
                 break;
         }
+    }
+
+    private Object processing(Pageable pageable, Invocation invocation) throws SQLException, InvocationTargetException, IllegalAccessException {
+        final Object[] args = invocation.getArgs();
+        MappedStatement ms = (MappedStatement) args[0];
+        final Object parameter = args[1];
+        final BoundSql boundSql = ms.getBoundSql(parameter);
+        String sql = boundSql.getSql().trim().replaceAll(";$", "");
+
+        Long total = executeCountQuery(sql, ms, boundSql);
+
+        // 获取分页SQL，并完成参数准备
+        String limitSql = dialect.getLimitString(sql, pageable.getOffset(), pageable.getPageSize());
+        args[2] = RowBounds.DEFAULT;
+        args[0] = copyFromNewSql(ms, boundSql, limitSql);
+
+        Object result = invocation.proceed();
+
+        Page<?> page = new PageImpl<>((List<?>) result, pageable, total);
+
+        List<Page<?>> tmp = new ArrayList<>(1);
+        tmp.add(page);
+
+        return tmp;
     }
 
     private Long executeCountQuery(String sql, MappedStatement mappedStatement, BoundSql boundSql) throws SQLException {

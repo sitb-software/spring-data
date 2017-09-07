@@ -4,7 +4,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -46,7 +45,7 @@ public class EntityRepositoryImpl implements EntityRepository {
     }
 
     @Override
-    public <T> T findOne(Class<T> domainCLass, Specification<T> specification) {
+    public <T> T findOne(Class<T> domainCLass, Specification<T, T> specification) {
         try {
             return getQuery(true, domainCLass, specification, (Sort) null).getSingleResult();
         } catch (NoResultException e) {
@@ -55,8 +54,8 @@ public class EntityRepositoryImpl implements EntityRepository {
     }
 
     @Override
-    public <T> T findOneWithRandom(Class<T> domainClass, Specification<T> specification) {
-        long count = countQuery(domainClass, specification);
+    public <T> T findOneWithRandom(Class<T> domainClass, Specification<T, T> specification) {
+        long count = countQuery(domainClass, (Specification<T, Long>) specification);
         if (count == 0)
             return null;
         TypedQuery<T> query = getQuery(true, domainClass, specification, (Sort) null);
@@ -153,7 +152,7 @@ public class EntityRepositoryImpl implements EntityRepository {
 
     @Override
     @Transactional
-    public <T> void delete(Class<T> domainClass, Specification<T> specification) {
+    public <T> void delete(Class<T> domainClass, Specification<T, T> specification) {
         delete(findAll(domainClass, specification));
     }
 
@@ -252,12 +251,12 @@ public class EntityRepositoryImpl implements EntityRepository {
     }
 
     @Override
-    public <T> Long countQuery(Class<T> domainClass, Specification<T> specification) {
+    public <T> Long countQuery(Class<T> domainClass, Specification<T, Long> specification) {
         return executeCountQuery(getCountQuery(domainClass, specification));
     }
 
     @Override
-    public <R, T> List<R> query(Class<R> resultClass, Class<T> domainClass, Specification<T> specification) {
+    public <R, T> List<R> query(Class<R> resultClass, Class<T> domainClass, Specification<T, R> specification) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<R> query = builder.createQuery(resultClass);
         applySpecificationToCriteria(domainClass, specification, query);
@@ -265,7 +264,7 @@ public class EntityRepositoryImpl implements EntityRepository {
     }
 
     @Override
-    public <R, T> R queryOne(Class<R> resultClass, Class<T> domainClass, Specification<T> specification) {
+    public <R, T> R queryOne(Class<R> resultClass, Class<T> domainClass, Specification<T, R> specification) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<R> query = builder.createQuery(resultClass);
         applySpecificationToCriteria(domainClass, specification, query);
@@ -278,17 +277,17 @@ public class EntityRepositoryImpl implements EntityRepository {
     }
 
     @Override
-    public <T> List<T> findAll(Class<T> domainClass, Specification<T> specification) {
+    public <T> List<T> findAll(Class<T> domainClass, Specification<T, T> specification) {
         return getQuery(true, domainClass, specification, (Sort) null).getResultList();
     }
 
     @Override
-    public <T> List<T> findAllMultiSelect(Class<T> domainClass, Specification<T> specification) {
+    public <T> List<T> findAllMultiSelect(Class<T> domainClass, Specification<T, T> specification) {
         return getQuery(false, domainClass, specification, (Sort) null).getResultList();
     }
 
     @Override
-    public <T> Page<T> findAll(Class<T> domainClass, Specification<T> spec, Pageable pageable) {
+    public <T> Page<T> findAll(Class<T> domainClass, Specification<T, T> spec, Pageable pageable) {
         TypedQuery<T> query = getQuery(true, domainClass, spec, pageable);
         return pageable == null ? new PageImpl<>(query.getResultList()) : readPage(domainClass, query, pageable, spec);
     }
@@ -314,13 +313,13 @@ public class EntityRepositoryImpl implements EntityRepository {
     }
 
     @Override
-    public <T> boolean exists(Class<T> domainClass, Specification<T> specification) {
+    public <T> boolean exists(Class<T> domainClass, Specification<T, Long> specification) {
         Long count = countQuery(domainClass, specification);
         return null != count && count > 0;
     }
 
     @Override
-    public <T> List<T> findAll(Class<T> domainClass, Specification<T> spec, Sort sort) {
+    public <T> List<T> findAll(Class<T> domainClass, Specification<T, T> spec, Sort sort) {
         return getQuery(true, domainClass, spec, sort).getResultList();
     }
 
@@ -355,7 +354,7 @@ public class EntityRepositoryImpl implements EntityRepository {
         return query;
     }
 
-    private <T> TypedQuery<Long> getCountQuery(Class<T> domainClass, Specification<T> spec) {
+    private <T> TypedQuery<Long> getCountQuery(Class<T> domainClass, Specification<T, Long> spec) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> query = builder.createQuery(Long.class);
 
@@ -370,7 +369,7 @@ public class EntityRepositoryImpl implements EntityRepository {
         return entityManager.createQuery(query);
     }
 
-    private <T> TypedQuery<T> getQuery(boolean selectAll, Class<T> domainClass, Specification<T> specification, Sort sort) {
+    private <T> TypedQuery<T> getQuery(boolean selectAll, Class<T> domainClass, Specification<T, T> specification, Sort sort) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<T> query = builder.createQuery(domainClass);
 
@@ -386,13 +385,13 @@ public class EntityRepositoryImpl implements EntityRepository {
         return entityManager.createQuery(query);
     }
 
-    private <T> TypedQuery<T> getQuery(boolean selectAll, Class<T> domainClass, Specification<T> spec, Pageable pageable) {
+    private <T> TypedQuery<T> getQuery(boolean selectAll, Class<T> domainClass, Specification<T, T> spec, Pageable pageable) {
 
         Sort sort = pageable == null ? null : pageable.getSort();
         return getQuery(selectAll, domainClass, spec, sort);
     }
 
-    private <T> Root<T> applySpecificationToCriteria(Class<T> domainClass, Specification<T> specification, CriteriaQuery<?> query) {
+    private <R, T> Root<T> applySpecificationToCriteria(Class<T> domainClass, Specification<T, R> specification, CriteriaQuery<R> query) {
         Root<T> root = query.from(domainClass);
 
         if (specification == null) {

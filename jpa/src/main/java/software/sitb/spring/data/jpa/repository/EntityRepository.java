@@ -3,7 +3,6 @@ package software.sitb.spring.data.jpa.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Collection;
 import java.util.List;
@@ -29,7 +28,7 @@ public interface EntityRepository {
      */
     <T> T findOne(Class<T> domainClass, Long id);
 
-    <T> T findOne(Class<T> domainCLass, Specification<T> specification);
+    <T> T findOne(Class<T> domainCLass, Specification<T, T> specification);
 
     /**
      * 随机查询一条数据
@@ -39,7 +38,7 @@ public interface EntityRepository {
      * @param <T>           表类型
      * @return 随机数据
      */
-    <T> T findOneWithRandom(Class<T> domainClass, Specification<T> specification);
+    <T> T findOneWithRandom(Class<T> domainClass, Specification<T, T> specification);
 
     /**
      * 保存数据
@@ -86,7 +85,7 @@ public interface EntityRepository {
      */
     <T> void delete(Collection<T> entities);
 
-    <T> void delete(Class<T> domainClass, Specification<T> specification);
+    <T> void delete(Class<T> domainClass, Specification<T, T> specification);
 
     /**
      * 根据传入的JPQL语句查询数据
@@ -152,15 +151,15 @@ public interface EntityRepository {
 
     <T> Long countQuery(Class<T> domainClass);
 
-    <T> Long countQuery(Class<T> domainClass, Specification<T> specification);
+    <T> Long countQuery(Class<T> domainClass, Specification<T, Long> specification);
 
-    <R, T> List<R> query(Class<R> resultClass, Class<T> domainClass, Specification<T> specification);
+    <R, T> List<R> query(Class<R> resultClass, Class<T> domainClass, Specification<T, R> specification);
 
-    <R, T> R queryOne(Class<R> resultClass, Class<T> domainClass, Specification<T> specification);
+    <R, T> R queryOne(Class<R> resultClass, Class<T> domainClass, Specification<T, R> specification);
 
     <T> List<T> findAll(Class<T> domainClass);
 
-    <T> List<T> findAll(Class<T> domainClass, Specification<T> specification);
+    <T> List<T> findAll(Class<T> domainClass, Specification<T, T> specification);
 
     /**
      * 查询所有数据,可在条件中指定multiselect,
@@ -171,11 +170,11 @@ public interface EntityRepository {
      * @param <T>           实体类型
      * @return 查询结果集
      */
-    <T> List<T> findAllMultiSelect(Class<T> domainClass, Specification<T> specification);
+    <T> List<T> findAllMultiSelect(Class<T> domainClass, Specification<T, T> specification);
 
-    <T> List<T> findAll(Class<T> domainClass, Specification<T> spec, Sort sort);
+    <T> List<T> findAll(Class<T> domainClass, Specification<T, T> spec, Sort sort);
 
-    <T> Page<T> findAll(Class<T> domainClass, Specification<T> spec, Pageable pageable);
+    <T> Page<T> findAll(Class<T> domainClass, Specification<T, T> spec, Pageable pageable);
 
     int executeUpdate(String updateJpql, Object... params);
 
@@ -191,7 +190,7 @@ public interface EntityRepository {
      * @param <T>           表类型
      * @return 数据存在返回true, 不存在返回false
      */
-    <T> boolean exists(Class<T> domainClass, Specification<T> specification);
+    <T> boolean exists(Class<T> domainClass, Specification<T, Long> specification);
 
     /**
      * 获取原生对象

@@ -6,13 +6,13 @@ public class OracleDialect extends Dialect {
     /**
      * 分页sql
      */
-    final static String LIMIT_SQL_PATTERN = "select * from ( select row__.*, rownum rownum__ from ( %s ) row__ where rownum <=  %s ) where rownum__ > %s ";
+    private final static String LIMIT_SQL_PATTERN = "select * from ( select row__.*, rownum rownum__ from ( %s ) row__ where rownum <=  %s ) where rownum__ > %s ";
 
 
     /**
      * 分页sql首页
      */
-    final static String LIMIT_SQL_PATTERN_FIRST = "select * from ( %s ) where rownum <= %s";
+    private final static String LIMIT_SQL_PATTERN_FIRST = "select * from ( %s ) where rownum <= %s";
 
 
     @Override

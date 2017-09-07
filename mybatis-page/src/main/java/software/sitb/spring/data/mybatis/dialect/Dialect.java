@@ -1,5 +1,7 @@
 package software.sitb.spring.data.mybatis.dialect;
 
+import org.springframework.data.domain.Sort;
+
 public abstract class Dialect {
 
 
@@ -9,6 +11,19 @@ public abstract class Dialect {
 
     public abstract String getLimitString(String sql, int offset, int limit);
 
+    public String getSortSql(Sort sort) {
+        if (null == sort) {
+            return "";
+        }
+
+
+        StringBuilder sortStr = new StringBuilder(" ORDER BY ");
+
+        for (Sort.Order order : sort) {
+            sortStr.append(order.getProperty()).append(" ").append(order.getDirection()).append(",");
+        }
+        return sortStr.toString();
+    }
 
     /**
      * 将sql转换为总记录数SQL

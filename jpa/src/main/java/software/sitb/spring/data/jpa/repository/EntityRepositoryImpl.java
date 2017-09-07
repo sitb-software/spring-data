@@ -32,25 +32,6 @@ public class EntityRepositoryImpl implements EntityRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
-    /**
-     * Executes a count query and transparently sums up all values returned.
-     *
-     * @param query must not be {@literal null}.
-     * @return Long
-     */
-    protected static Long executeCountQuery(TypedQuery<Long> query) {
-
-        Assert.notNull(query);
-
-        List<Long> totals = query.getResultList();
-        Long total = 0L;
-
-        for (Long element : totals) {
-            total += element == null ? 0 : element;
-        }
-
-        return total;
-    }
 
     /**
      * 通过ID 查询数据
@@ -232,15 +213,6 @@ public class EntityRepositoryImpl implements EntityRepository {
         return executeQueryOne(query);
     }
 
-    private <T> T executeQueryOne(Query query) {
-        T result = null;
-        try {
-            result = (T) query.getSingleResult();
-        } catch (Exception ignored) {
-        }
-        return result;
-    }
-
     /**
      * @param select   jpql语句select部分
      * @param from     jpql 语句 from到结束部分
@@ -282,6 +254,22 @@ public class EntityRepositoryImpl implements EntityRepository {
     @Override
     public <T> Long countQuery(Class<T> domainClass, Specification<T> specification) {
         return executeCountQuery(getCountQuery(domainClass, specification));
+    }
+
+    @Override
+    public <R, T> List<R> query(Class<R> resultClass, Class<T> domainClass, Specification<T> specification) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<R> query = builder.createQuery(resultClass);
+        applySpecificationToCriteria(domainClass, specification, query);
+        return entityManager.createQuery(query).getResultList();
+    }
+
+    @Override
+    public <R, T> R queryOne(Class<R> resultClass, Class<T> domainClass, Specification<T> specification) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<R> query = builder.createQuery(resultClass);
+        applySpecificationToCriteria(domainClass, specification, query);
+        return entityManager.createQuery(query).getSingleResult();
     }
 
     @Override
@@ -334,6 +322,11 @@ public class EntityRepositoryImpl implements EntityRepository {
     @Override
     public <T> List<T> findAll(Class<T> domainClass, Specification<T> spec, Sort sort) {
         return getQuery(true, domainClass, spec, sort).getResultList();
+    }
+
+    @Override
+    public Object getNative() {
+        return this.entityManager;
     }
 
     private <T> Page<T> readPage(String from, Query query, Pageable pageable, Object... params) {
@@ -400,7 +393,6 @@ public class EntityRepositoryImpl implements EntityRepository {
     }
 
     private <T> Root<T> applySpecificationToCriteria(Class<T> domainClass, Specification<T> specification, CriteriaQuery<?> query) {
-        Assert.notNull(query);
         Root<T> root = query.from(domainClass);
 
         if (specification == null) {
@@ -417,19 +409,40 @@ public class EntityRepositoryImpl implements EntityRepository {
         return root;
     }
 
-    @Override
-    public Object getNative() {
-        return this.entityManager;
+    /**
+     * Executes a count query and transparently sums up all values returned.
+     *
+     * @param query must not be {@literal null}.
+     * @return Long
+     */
+    private Long executeCountQuery(TypedQuery<Long> query) {
+        List<Long> totals = query.getResultList();
+        Long total = 0L;
+
+        for (Long element : totals) {
+            total += element == null ? 0 : element;
+        }
+
+        return total;
     }
 
-    protected void setQueryParams(Query query, Object... params) {
+    private <T> T executeQueryOne(Query query) {
+        T result = null;
+        try {
+            result = (T) query.getSingleResult();
+        } catch (Exception ignored) {
+        }
+        return result;
+    }
+
+    private void setQueryParams(Query query, Object... params) {
         int i = 0;
         for (Object param : params) {
             query.setParameter(i++, param);
         }
     }
 
-    protected void setQueryParams(Query query, Map<String, Object> params) {
+    private void setQueryParams(Query query, Map<String, Object> params) {
         for (String key : params.keySet()) {
             query.setParameter(key, params.get(key));
         }

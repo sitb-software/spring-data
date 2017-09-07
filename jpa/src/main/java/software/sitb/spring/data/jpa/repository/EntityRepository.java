@@ -13,8 +13,8 @@ import java.util.Map;
  * 公共数据查询仓库
  *
  * @author 田尘殇
- *         date 2015/5/22
- *         time 13:18
+ * date 2015/5/22
+ * time 13:18
  */
 public interface EntityRepository {
 
@@ -153,6 +153,10 @@ public interface EntityRepository {
     <T> Long countQuery(Class<T> domainClass);
 
     <T> Long countQuery(Class<T> domainClass, Specification<T> specification);
+
+    <R, T> List<R> query(Class<R> resultClass, Class<T> domainClass, Specification<T> specification);
+
+    <R, T> R queryOne(Class<R> resultClass, Class<T> domainClass, Specification<T> specification);
 
     <T> List<T> findAll(Class<T> domainClass);
 

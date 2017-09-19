@@ -282,8 +282,19 @@ public class EntityRepositoryImpl implements EntityRepository {
     }
 
     @Override
-    public <T> List<T> findAllMultiSelect(Class<T> domainClass, Specification<T, T> specification) {
+    public <T> List<T> findAllCustomSelect(Class<T> domainClass, Specification<T, T> specification) {
         return getQuery(false, domainClass, specification, (Sort) null).getResultList();
+    }
+
+    @Override
+    public <T> List<T> findAllCustomSelect(Class<T> domainClass, Specification<T, T> specification, Sort sort) {
+        return getQuery(false, domainClass, specification, sort).getResultList();
+    }
+
+    @Override
+    public <T> Page<T> findAllCustomSelect(Class<T> domainClass, Specification<T, T> specification, Pageable pageable) {
+        TypedQuery<T> query = getQuery(false, domainClass, specification, pageable);
+        return pageable == null ? new PageImpl<>(query.getResultList()) : readPage(domainClass, query, pageable, specification);
     }
 
     @Override

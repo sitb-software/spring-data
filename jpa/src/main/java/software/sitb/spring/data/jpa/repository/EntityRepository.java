@@ -162,7 +162,7 @@ public interface EntityRepository {
     <T> List<T> findAll(Class<T> domainClass, Specification<T, T> specification);
 
     /**
-     * 查询所有数据,可在条件中指定multiselect,
+     * 查询所有数据,可在条件中自定义select
      * 需要有对应的实体构造器
      *
      * @param domainClass   实体Class
@@ -170,7 +170,11 @@ public interface EntityRepository {
      * @param <T>           实体类型
      * @return 查询结果集
      */
-    <T> List<T> findAllMultiSelect(Class<T> domainClass, Specification<T, T> specification);
+    <T> List<T> findAllCustomSelect(Class<T> domainClass, Specification<T, T> specification);
+
+    <T> List<T> findAllCustomSelect(Class<T> domainClass, Specification<T, T> specification, Sort sort);
+
+    <T> Page<T> findAllCustomSelect(Class<T> domainClass, Specification<T, T> specification, Pageable pageable);
 
     <T> List<T> findAll(Class<T> domainClass, Specification<T, T> spec, Sort sort);
 

@@ -10,13 +10,6 @@ import javax.persistence.criteria.Root;
  * @param <R> 查询结果类型
  */
 public interface Specification<T, R> {
-    /**
-     * Creates a WHERE clause for a query of the referenced entity in form of a {@link Predicate} for the given
-     * {@link Root} and {@link CriteriaQuery}.
-     *
-     * @param root  root
-     * @param query query
-     * @return a {@link Predicate}, must not be {@literal null}.
-     */
+
     Predicate toPredicate(Root<T> root, CriteriaQuery<R> query, CriteriaBuilder cb);
 }

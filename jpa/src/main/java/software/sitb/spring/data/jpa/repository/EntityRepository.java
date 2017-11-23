@@ -17,29 +17,6 @@ import java.util.Map;
  */
 public interface EntityRepository {
 
-
-    /**
-     * 通过ID 查询数据
-     *
-     * @param domainClass 表实体类Class
-     * @param id          id 值
-     * @param <T>         实际表类型
-     * @return 查询的结果
-     */
-    <T> T findOne(Class<T> domainClass, Long id);
-
-    <T> T findOne(Class<T> domainCLass, Specification<T, T> specification);
-
-    /**
-     * 随机查询一条数据
-     *
-     * @param domainClass   表实体Class
-     * @param specification 条件
-     * @param <T>           表类型
-     * @return 随机数据
-     */
-    <T> T findOneWithRandom(Class<T> domainClass, Specification<T, T> specification);
-
     /**
      * 保存数据
      *
@@ -153,13 +130,35 @@ public interface EntityRepository {
 
     <T> Long countQuery(Class<T> domainClass, Specification<T, Long> specification);
 
-    <R, T> List<R> query(Class<R> resultClass, Class<T> domainClass, Specification<T, R> specification);
+    /**
+     * 通过ID 查询数据
+     *
+     * @param domainClass 表实体类Class
+     * @param id          id 值
+     * @param <T>         实际表类型
+     * @return 查询的结果
+     */
+    <T> T findOne(Class<T> domainClass, Long id);
 
-    <R, T> R queryOne(Class<R> resultClass, Class<T> domainClass, Specification<T, R> specification);
+    <T> T findOne(Class<T> domainCLass, Specification<T, T> specification);
+
+    /**
+     * 随机查询一条数据
+     *
+     * @param domainClass   表实体Class
+     * @param specification 条件
+     * @param <T>           表类型
+     * @return 随机数据
+     */
+    <T> T findOneWithRandom(Class<T> domainClass, Specification<T, T> specification);
 
     <T> List<T> findAll(Class<T> domainClass);
 
     <T> List<T> findAll(Class<T> domainClass, Specification<T, T> specification);
+
+    <T> List<T> findAll(Class<T> domainClass, Specification<T, T> specification, Sort sort);
+
+    <T> Page<T> findAll(Class<T> domainClass, Specification<T, T> specification, Pageable pageable);
 
     /**
      * 查询所有数据,可在条件中自定义select
@@ -176,9 +175,19 @@ public interface EntityRepository {
 
     <T> Page<T> findAllCustomSelect(Class<T> domainClass, Specification<T, T> specification, Pageable pageable);
 
-    <T> List<T> findAll(Class<T> domainClass, Specification<T, T> spec, Sort sort);
+    <T, R> List<R> findAllCustomSelect(Class<T> domainClass, Class<R> resultClass, Specification<T, R> specification);
 
-    <T> Page<T> findAll(Class<T> domainClass, Specification<T, T> spec, Pageable pageable);
+    <T, R> List<R> findAllCustomSelect(Class<T> domainClass, Class<R> resultClass, Specification<T, R> specification, Sort sort);
+
+    <T, R> Page<R> findAllCustomSelect(Class<T> domainClass, Class<R> resultClass, Specification<T, R> specification, Pageable pageable);
+
+    <T> T findOneCustomSelect(Class<T> domainClass, Specification<T, T> specification);
+
+    <T> T findOneCustomSelect(Class<T> domainClass, Specification<T, T> specification, Sort sort);
+
+    <T, R> R findOneCustomSelect(Class<T> domainClass, Class<R> resultClass, Specification<T, R> specification);
+
+    <T, R> R findOneCustomSelect(Class<T> domainClass, Class<R> resultClass, Specification<T, R> specification, Sort sort);
 
     int executeUpdate(String updateJpql, Object... params);
 

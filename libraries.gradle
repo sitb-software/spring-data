@@ -1,19 +1,19 @@
 ext.repoUrl = "https://repo.sitb.software/repository/maven-public/"
-ext.spring_boot = "1.5.2.RELEASE"
+ext.spring_boot = "1.5.8.RELEASE"
 ext.spring_security = "4.2.2.RELEASE"
-ext.spring_data_commons = "1.13.1.RELEASE"
-ext.spring_data_jpa = "1.11.1.RELEASE"
-ext.spring = "4.3.7.RELEASE"
+ext.spring_data_commons = "1.13.8.RELEASE"
+ext.spring_data_jpa = "1.11.8.RELEASE"
+ext.spring = "5.0.1.RELEASE"
 ext.springloaded = "1.2.7.RELEASE"
-ext.hibernate = "5.2.9.Final"
-ext.jpa = "5.2.9.Final"
+ext.hibernate = "5.2.12.Final"
+ext.jpa = "5.2.12.Final"
 ext.postgresql = "9.4.1212.jre7"
-ext.jackson = "2.8.8"
-ext.activemq = "5.14.4"
-ext.apache_poi = "3.15"
-ext.okhttp3 = "3.8.0"
-ext.retrofit = "2.1.0"
-ext.itextpdf = "5.5.10"
+ext.jackson = "2.9.2"
+ext.activemq = "5.15.2"
+ext.apache_poi = "3.17"
+ext.okhttp3 = "3.9.1"
+ext.retrofit = "2.3.0"
+ext.itextpdf = "5.5.12"
 ext.groovy = "2.4.12"
 ext.lib = [
         _test                              : [
@@ -56,7 +56,7 @@ ext.lib = [
         spring_security_config             : "org.springframework.security:spring-security-config:$spring_security",
         spring_security_web                : "org.springframework.security:spring-security-web:$spring_security",
         spring_security_oauth2             : "org.springframework.security.oauth:spring-security-oauth2:2.0.8.RELEASE",
-        spring_integration_mail            : "org.springframework.integration:spring-integration-mail:$spring",
+        spring_integration_mail            : "org.springframework.integration:spring-integration-mail:4.3.12.RELEASE",
         spring_boot                        : "org.springframework.boot:spring-boot-starter:$spring_boot",
         spring_boot_actuator               : "org.springframework.boot:spring-boot-starter-actuator:$spring_boot",
         spring_boot_remote_shell           : "org.springframework.boot:spring-boot-starter-remote-shell:$spring_boot",
@@ -64,6 +64,7 @@ ext.lib = [
         spring_boot_web                    : "org.springframework.boot:spring-boot-starter-web:$spring_boot",
         srping_boot_email                  : "org.springframework.boot:spring-boot-starter-mail:$spring_boot",
         spring_boot_data_jpa               : "org.springframework.boot:spring-boot-starter-data-jpa:$spring_boot",
+        spring_boot_data_mongodb           : "org.springframework.boot:spring-boot-starter-data-mongodb:$spring_boot",
         spring_boot_freemarker             : "org.springframework.boot:spring-boot-starter-freemarker:$spring_boot",
         spring_boot_thymeleaf              : "org.springframework.boot:spring-boot-starter-thymeleaf:$spring_boot",
         spring_boot_websocket              : "org.springframework.boot:spring-boot-starter-websocket:$spring_boot",
@@ -136,7 +137,7 @@ ext.lib = [
         jpush_client                       : "cn.jpush.api:jpush-client:3.3.0",
         sitb_dswrs                         : "software.sitb:dswrs:1.0.15.RELEASE",
         sitb_utils                         : "software.sitb:utils:1.0.11.RELEASE",
-        sitb_spring_data_jpa               : "software.sitb.spring.data:jpa:1.0.1.RELEASE",
+        sitb_spring_data_jpa               : "software.sitb.spring.data:jpa:1.0.7.RELEASE",
         sitb_spring_data_mybatis_page      : "software.sitb.spring.data:mybatis-page:1.0.2.RELEASE",
         sitb_spring_cache                  : "software.sitb.spring:cache:1.0.1.RELEASE"
 ]

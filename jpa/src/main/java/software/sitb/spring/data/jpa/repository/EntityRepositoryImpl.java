@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -16,7 +17,6 @@ import javax.persistence.criteria.Root;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.springframework.data.jpa.repository.query.QueryUtils.toOrders;
 
 /**
  * @author 田尘殇
@@ -390,7 +390,7 @@ public class EntityRepositoryImpl implements EntityRepository {
         }
 
         if (sort != null) {
-            query.orderBy(toOrders(sort, root, builder));
+            query.orderBy(QueryUtils.toOrders(sort, root, builder));
         }
 
         return entityManager.createQuery(query);

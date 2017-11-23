@@ -1,5 +1,7 @@
 description = 'jpa'
 
+version '1.0.7.RELEASE'
+
 dependencies {
     provided lib.spring_data_jpa
     provided lib.jpa_api

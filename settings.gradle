@@ -2,4 +2,5 @@ rootProject.name = 'spring-data'
 
 include ':commons'
 include ':jpa'
+include ':mongo'
 include ':mybatis-page'

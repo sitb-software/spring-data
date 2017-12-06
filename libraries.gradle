@@ -3,6 +3,7 @@ ext.spring_boot = "1.5.8.RELEASE"
 ext.spring_security = "4.2.2.RELEASE"
 ext.spring_data_commons = "1.13.8.RELEASE"
 ext.spring_data_jpa = "1.11.8.RELEASE"
+ext.spring_data_mongodb = "2.0.2.RELEASE"
 ext.spring = "5.0.1.RELEASE"
 ext.springloaded = "1.2.7.RELEASE"
 ext.hibernate = "5.2.12.Final"
@@ -49,6 +50,7 @@ ext.lib = [
         spring_orm                         : "org.springframework:spring-orm:$spring",
         spring_data_commons                : "org.springframework.data:spring-data-commons:${spring_data_commons}",
         spring_data_jpa                    : "org.springframework.data:spring-data-jpa:${spring_data_jpa}",
+        spring_data_mongodb                : "org.springframework.data:spring-data-mongodb:${spring_data_mongodb}",
         spring_jms                         : "org.springframework:spring-jms:$spring",
         spring_ws_core                     : "org.springframework.ws:spring-ws-core:2.2.4.RELEASE",
         spring_messaging                   : "org.springframework:spring-messaging:4.3.7.RELEASE",

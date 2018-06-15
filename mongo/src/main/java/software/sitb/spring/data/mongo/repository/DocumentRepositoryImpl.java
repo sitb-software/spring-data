@@ -32,7 +32,7 @@ public class DocumentRepositoryImpl implements DocumentRepository {
             query.with(pageable);
         }
         List<T> content = this.mongoTemplate.find(query, documentClass);
-        Long total = this.mongoTemplate.count(query, documentClass);
+        long total = this.mongoTemplate.count(query, documentClass);
 
         return pageable == null ? new PageImpl<>(content) : new PageImpl<>(content, pageable, total);
     }

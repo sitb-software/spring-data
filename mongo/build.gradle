@@ -1,6 +1,6 @@
 description = 'mongo'
 
-version '1.0.0.RELEASE'
+version '1.0.1.RELEASE'
 
 dependencies {
     provided lib.spring_data_mongodb

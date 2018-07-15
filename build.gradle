@@ -1,61 +1,19 @@
-apply from: 'libraries.gradle'
+apply from: 'https://onegit.app/enterprise/public/raw/master/libraries.gradle'
 
 allprojects {
     group 'software.sitb.spring.data'
 
     repositories {
         maven { url "${repoUrl}" }
+        jcenter()
     }
 
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.3.1'
-    distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }
 
 subprojects {
-    apply plugin: 'java'
-    apply plugin: 'idea'
-    apply plugin: 'maven-publish'
-
-    buildscript {
-        repositories {
-            maven { url "${repoUrl}" }
-        }
-    }
-
-    [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
-
-    targetCompatibility = JavaVersion.VERSION_1_8
-    sourceCompatibility = JavaVersion.VERSION_1_8
-
-    configurations {
-        optional
-        provided {
-            visible = false
-        }
-        compile {
-            extendsFrom optional
-        }
-        testCompile {
-            extendsFrom provided
-        }
-    }
-
-    sourceSets {
-        main {
-            compileClasspath += configurations.optional
-            compileClasspath += configurations.provided
-        }
-    }
-
-    idea {
-        module {
-            scopes.PROVIDED.plus += [configurations.optional]
-            scopes.PROVIDED.plus += [configurations.provided]
-        }
-    }
+    apply from: 'https://onegit.app/enterprise/public/raw/master/java.gradle'
+    apply from: 'https://onegit.app/enterprise/public/raw/master/idea.gradle'
+    apply from: 'https://onegit.app/enterprise/public/raw/master/publishing.gradle'
 
     task sourcesJar(type: Jar, dependsOn: classes) {
         classifier = 'sources'
@@ -70,19 +28,6 @@ subprojects {
     artifacts {
         archives sourcesJar
         archives javadocJar
-    }
-
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
-            }
-        }
-    }
-
-    dependencies {
-        provided lib.logging
-        testCompile lib._test
     }
 }
 

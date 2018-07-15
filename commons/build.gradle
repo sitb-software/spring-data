@@ -1,5 +1,5 @@
 description = 'commons'
 
 dependencies {
-    provided lib.spring_data_commons
+    compileOnly lib.spring_data_commons
 }

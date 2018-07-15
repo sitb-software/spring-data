@@ -3,6 +3,6 @@ description = 'jpa'
 version '1.0.8.RELEASE'
 
 dependencies {
-    provided lib.spring_data_jpa
-    provided lib.jpa_api
+    compileOnly lib.spring_data_jpa
+//    compileOnly lib.jpa_api
 }

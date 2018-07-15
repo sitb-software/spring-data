@@ -1,6 +1,6 @@
 description = 'mybatis-page'
 
 dependencies {
-    provided lib.mybatis
-    provided lib.spring_data_commons
+    compileOnly lib.mybatis
+    compileOnly lib.spring_data_commons
 }

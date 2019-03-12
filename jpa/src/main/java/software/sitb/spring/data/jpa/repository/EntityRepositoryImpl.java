@@ -374,7 +374,7 @@ public class EntityRepositoryImpl implements EntityRepository {
     }
 
     private <T> Page<T> executeReadPage(Query query, Pageable pageable, Long total) {
-        query.setFirstResult(pageable.getOffset());
+        query.setFirstResult((int) pageable.getOffset());
         query.setMaxResults(pageable.getPageSize());
         List<T> content = total > pageable.getOffset() ? query.getResultList() : Collections.emptyList();
         if (content == null)

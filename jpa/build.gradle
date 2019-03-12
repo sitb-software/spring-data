@@ -1,6 +1,6 @@
 description = 'jpa'
 
-version '1.0.8.RELEASE'
+version '1.0.9.RELEASE'
 
 dependencies {
     compileOnly lib.spring_data_jpa

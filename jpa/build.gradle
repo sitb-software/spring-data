@@ -4,5 +4,5 @@ version '1.0.8.RELEASE'
 
 dependencies {
     compileOnly lib.spring_data_jpa
-//    compileOnly lib.jpa_api
+    compileOnly lib.jpa_api
 }

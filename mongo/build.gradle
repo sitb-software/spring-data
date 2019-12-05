@@ -1,6 +1,6 @@
 description = 'mongo'
 
-version '1.0.1.RELEASE'
+version '1.0.2.RELEASE'
 
 dependencies {
     compileOnly lib.spring_boot_data_mongodb

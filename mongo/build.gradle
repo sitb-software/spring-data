@@ -2,6 +2,8 @@ description = 'mongo'
 
 version '1.0.4'
 
+apply from: 'https://onegit.com/enterprise/public/raw/master/publishing-with-source.gradle'
+
 dependencies {
     compileOnly lib.spring_boot_data_mongodb
 }

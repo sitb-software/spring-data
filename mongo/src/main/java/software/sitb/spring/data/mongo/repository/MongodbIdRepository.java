@@ -1,14 +1,10 @@
 package software.sitb.spring.data.mongo.repository;
 
-import com.mongodb.DB;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Sean(sean.snow @ live.com) createAt 17-12-26.

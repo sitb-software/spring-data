@@ -1,5 +1,6 @@
 package software.sitb.spring.data.mongo.repository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -11,11 +12,8 @@ import org.springframework.data.mongodb.core.query.Update;
  */
 public class MongodbIdRepository implements IdRepository {
 
-    private final MongoTemplate mongoTemplate;
-
-    public MongodbIdRepository(MongoTemplate mongoTemplate) {
-        this.mongoTemplate = mongoTemplate;
-    }
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @Override
     public Long generateSequence(String sequenceName) {

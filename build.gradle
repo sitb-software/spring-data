@@ -1,4 +1,4 @@
-apply from: 'https://onegit.app/enterprise/public/raw/master/libraries.gradle'
+apply from: 'https://onegit.com/enterprise/public/raw/master/libraries.gradle'
 
 allprojects {
     group 'software.sitb.spring.data'
@@ -11,9 +11,9 @@ allprojects {
 }
 
 subprojects {
-    apply from: 'https://onegit.app/enterprise/public/raw/master/java.gradle'
-    apply from: 'https://onegit.app/enterprise/public/raw/master/idea.gradle'
-    apply from: 'https://onegit.app/enterprise/public/raw/master/publishing.gradle'
+    apply from: 'https://onegit.com/enterprise/public/raw/master/java.gradle'
+    apply from: 'https://onegit.com/enterprise/public/raw/master/idea.gradle'
+    apply from: 'https://onegit.com/enterprise/public/raw/master/publishing.gradle'
 
     task sourcesJar(type: Jar, dependsOn: classes) {
         classifier = 'sources'

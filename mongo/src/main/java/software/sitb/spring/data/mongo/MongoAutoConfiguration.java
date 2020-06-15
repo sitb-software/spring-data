@@ -35,7 +35,6 @@ public class MongoAutoConfiguration {
     }
 
     @Bean
-    @Autowired
     @ConditionalOnMissingBean
     public IdRepository mongodbIdRepository() {
         return new MongodbIdRepository();

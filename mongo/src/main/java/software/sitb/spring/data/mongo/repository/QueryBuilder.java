@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  */
 public class QueryBuilder {
 
-    private Query query;
+    private final Query query;
 
     public final CriteriaBuilder criteria = CriteriaBuilder.instance;
 

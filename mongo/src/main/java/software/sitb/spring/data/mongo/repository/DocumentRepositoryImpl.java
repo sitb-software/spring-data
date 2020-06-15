@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class DocumentRepositoryImpl implements DocumentRepository {
 
-    private MongoTemplate mongoTemplate;
+    private final MongoTemplate mongoTemplate;
 
     public DocumentRepositoryImpl(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;

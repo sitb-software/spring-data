@@ -2,6 +2,8 @@ description = 'jpa'
 
 version '1.0.10'
 
+apply from: 'https://onegit.com/enterprise/public/raw/master/publishing-with-source.gradle'
+
 dependencies {
     compileOnly lib.spring_data_jpa
     compileOnly lib.jpa_api

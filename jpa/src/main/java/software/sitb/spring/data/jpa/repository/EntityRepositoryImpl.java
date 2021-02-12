@@ -14,6 +14,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,6 @@ public class EntityRepositoryImpl implements EntityRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
-
 
     @Override
     @Transactional
@@ -75,7 +75,7 @@ public class EntityRepositoryImpl implements EntityRepository {
 
     @Override
     @Transactional
-    public <T> void delete(Class<T> domainClass, Long id) {
+    public <T> void delete(Class<T> domainClass, Object id) {
         Assert.notNull(id, "id 不能为null");
 
         T entity = findOne(domainClass, id);
@@ -229,7 +229,7 @@ public class EntityRepositoryImpl implements EntityRepository {
      * @return 查询的结果
      */
     @Override
-    public <T> T findOne(Class<T> domainClass, Long id) {
+    public <T> T findOne(Class<T> domainClass, Object id) {
         return entityManager.find(domainClass, id);
     }
 

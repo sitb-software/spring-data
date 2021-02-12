@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +45,7 @@ public interface EntityRepository {
      *
      * @param id id
      */
-    <T> void delete(Class<T> domainClass, Long id);
+    <T> void delete(Class<T> domainClass, Object id);
 
     <T> void delete(T entity);
 
@@ -138,7 +139,7 @@ public interface EntityRepository {
      * @param <T>         实际表类型
      * @return 查询的结果
      */
-    <T> T findOne(Class<T> domainClass, Long id);
+    <T> T findOne(Class<T> domainClass, Object id);
 
     <T> T findOne(Class<T> domainCLass, Specification<T, T> specification);
 

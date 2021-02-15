@@ -4,7 +4,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +24,7 @@ public interface EntityRepository {
      */
     <T> void save(T entity);
 
-    <T> void save(T[] entities);
+    <T> void save(T... entities);
 
     /**
      * 保存数据
@@ -36,7 +35,7 @@ public interface EntityRepository {
 
     <T> T update(T entity);
 
-    <T> T[] update(T[] entities);
+    <T> T[] update(T... entities);
 
     <T> Collection<T> update(Collection<T> entities);
 
@@ -54,7 +53,7 @@ public interface EntityRepository {
      *
      * @param entities 数据表
      */
-    <T> void delete(T[] entities);
+    <T> void delete(T... entities);
 
     /**
      * 删除数据

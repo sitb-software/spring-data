@@ -14,7 +14,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -40,8 +39,10 @@ public class EntityRepositoryImpl implements EntityRepository {
 
     @Override
     @Transactional
-    public <T> void save(T[] entities) {
-        save(Arrays.asList(entities));
+    public <T> void save(T... entities) {
+        for (T entity : entities) {
+            entityManager.persist(entity);
+        }
     }
 
     /**
@@ -63,8 +64,11 @@ public class EntityRepositoryImpl implements EntityRepository {
 
     @Override
     @Transactional
-    public <T> T[] update(T[] entities) {
-        return (T[]) update(Arrays.asList(entities)).toArray();
+    public <T> T[] update(T... entities) {
+        for (T entity : entities) {
+            entityManager.merge(entity);
+        }
+        return entities;
     }
 
     @Override
@@ -99,7 +103,7 @@ public class EntityRepositoryImpl implements EntityRepository {
      */
     @Override
     @Transactional
-    public <T> void delete(T[] entities) {
+    public <T> void delete(T... entities) {
         delete(Arrays.asList(entities));
     }
 

@@ -37,14 +37,20 @@ public class EntityRepositoryImpl implements EntityRepository {
      */
     private final Object deleteFieldValue;
 
+    /**
+     * 启用删除逻辑判断
+     */
+    private final Boolean enabledDelete;
+
     @PersistenceContext
     private EntityManager entityManager;
 
     public EntityRepositoryImpl() {
-        this("deleted", true);
+        this(false, "deleted", true);
     }
 
-    public EntityRepositoryImpl(String deleteFieldName, Object deleteFieldValue) {
+    public EntityRepositoryImpl(Boolean enabledDelete, String deleteFieldName, Object deleteFieldValue) {
+        this.enabledDelete = enabledDelete;
         this.deleteFieldName = deleteFieldName;
         this.deleteFieldValue = deleteFieldValue;
     }
@@ -442,9 +448,12 @@ public class EntityRepositoryImpl implements EntityRepository {
         }
 
         // 排除删除的字段
-        predicates.add(builder.equal(root.get(deleteFieldName), deleteFieldValue));
-
-        query.where(builder.and(predicates.toArray(new Predicate[0])));
+        if (this.enabledDelete) {
+            predicates.add(builder.equal(root.get(deleteFieldName), deleteFieldValue));
+        }
+        if (predicates.size() > 0) {
+            query.where(builder.and(predicates.toArray(new Predicate[0])));
+        }
         return root;
     }
 

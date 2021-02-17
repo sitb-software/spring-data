@@ -27,8 +27,27 @@ public class EntityRepositoryImpl implements EntityRepository {
 
     public static final String COUNT_SELECT = "SELECT count(*) ";
 
+    /**
+     * 删除字段名
+     */
+    private final String deleteFieldName;
+
+    /**
+     * 标识数据已经删除的值
+     */
+    private final Object deleteFieldValue;
+
     @PersistenceContext
     private EntityManager entityManager;
+
+    public EntityRepositoryImpl() {
+        this("deleted", true);
+    }
+
+    public EntityRepositoryImpl(String deleteFieldName, Object deleteFieldValue) {
+        this.deleteFieldName = deleteFieldName;
+        this.deleteFieldValue = deleteFieldValue;
+    }
 
     @Override
     @Transactional
@@ -83,7 +102,7 @@ public class EntityRepositoryImpl implements EntityRepository {
     @Override
     @Transactional
     public void delete(Object... entities) {
-        for(Object entity: entities){
+        for (Object entity : entities) {
             this.entityManager.remove(this.entityManager.contains(entity) ? entity : this.entityManager.merge(entity));
         }
     }
@@ -416,10 +435,16 @@ public class EntityRepositoryImpl implements EntityRepository {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         Predicate predicate = specification.toPredicate(root, query, builder);
 
-        if (predicate != null) {
-            query.where(predicate);
+        List<Predicate> predicates = new ArrayList<>();
+        // 添加用户设置的查询条件
+        if (null != predicate) {
+            predicates.add(predicate);
         }
 
+        // 排除删除的字段
+        predicates.add(builder.equal(root.get(deleteFieldName), deleteFieldValue));
+
+        query.where(builder.and(predicates.toArray(new Predicate[0])));
         return root;
     }
 

@@ -14,7 +14,10 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 
 /**
@@ -27,27 +30,8 @@ public class EntityRepositoryImpl implements EntityRepository {
 
     public static final String COUNT_SELECT = "SELECT count(*) ";
 
-    /**
-     * 删除字段名
-     */
-    private final String deleteFieldName;
-
-    /**
-     * 标识数据已经删除的值
-     */
-    private final Object deleteFieldValue;
-
     @PersistenceContext
     private EntityManager entityManager;
-
-    public EntityRepositoryImpl() {
-        this("deleted", true);
-    }
-
-    public EntityRepositoryImpl(String deleteFieldName, Object deleteFieldValue) {
-        this.deleteFieldName = deleteFieldName;
-        this.deleteFieldValue = deleteFieldValue;
-    }
 
     @Override
     @Transactional
@@ -435,16 +419,10 @@ public class EntityRepositoryImpl implements EntityRepository {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         Predicate predicate = specification.toPredicate(root, query, builder);
 
-        List<Predicate> predicates = new ArrayList<>();
-        // 添加用户设置的查询条件
-        if (null != predicate) {
-            predicates.add(predicate);
+        if (predicate != null) {
+            query.where(predicate);
         }
 
-        // 排除删除的字段
-        predicates.add(builder.equal(root.get(deleteFieldName), deleteFieldValue));
-
-        query.where(builder.and(predicates.toArray(new Predicate[0])));
         return root;
     }
 

@@ -4,7 +4,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -20,47 +19,46 @@ public interface EntityRepository {
     /**
      * 保存数据
      *
-     * @param entity 数据表
+     * @param entities 数据表
      */
-    <T> void save(T entity);
-
-    <T> void save(T... entities);
+    void save(Object... entities);
 
     /**
      * 保存数据
      *
      * @param entities 数据表
      */
-    <T> void save(Collection<T> entities);
+    void save(Iterable<?> entities);
 
-    <T> T update(T entity);
+    /**
+     * 更新数据
+     *
+     * @param entities 数据表
+     */
+    void update(Object... entities);
 
-    <T> T[] update(T... entities);
-
-    <T> Collection<T> update(Collection<T> entities);
+    void update(Iterable<?> entities);
 
     /**
      * 通过id删除数据
      *
      * @param id id
      */
-    <T> void delete(Class<T> domainClass, Object id);
-
-    <T> void delete(T entity);
+    void delete(Class<?> domainClass, Object id);
 
     /**
      * 删除数据
      *
      * @param entities 数据表
      */
-    <T> void delete(T... entities);
+    void delete(Object... entities);
 
     /**
      * 删除数据
      *
      * @param entities 数据表
      */
-    <T> void delete(Collection<T> entities);
+    void delete(Iterable<?> entities);
 
     <T> void delete(Class<T> domainClass, Specification<T, T> specification);
 

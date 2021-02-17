@@ -15,7 +15,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 /**
@@ -33,14 +32,8 @@ public class EntityRepositoryImpl implements EntityRepository {
 
     @Override
     @Transactional
-    public <T> void save(T entity) {
-        entityManager.persist(entity);
-    }
-
-    @Override
-    @Transactional
-    public <T> void save(T... entities) {
-        for (T entity : entities) {
+    public void save(Object... entities) {
+        for (Object entity : entities) {
             entityManager.persist(entity);
         }
     }
@@ -52,50 +45,36 @@ public class EntityRepositoryImpl implements EntityRepository {
      */
     @Override
     @Transactional
-    public <T> void save(Collection<T> entities) {
-        entities.forEach(entity -> entityManager.persist(entity));
+    public void save(Iterable<?> entities) {
+        entities.forEach(this::save);
     }
+
 
     @Override
     @Transactional
-    public <T> T update(T entity) {
-        return entityManager.merge(entity);
-    }
-
-    @Override
-    @Transactional
-    public <T> T[] update(T... entities) {
-        for (T entity : entities) {
+    public void update(Object... entities) {
+        for (Object entity : entities) {
             entityManager.merge(entity);
         }
-        return entities;
     }
 
     @Override
     @Transactional
-    public <T> Collection<T> update(Collection<T> entities) {
-        return entities.stream().map(entity -> entityManager.merge(entity)).collect(Collectors.toList());
+    public void update(Iterable<?> entities) {
+        entities.forEach(this::update);
     }
 
     @Override
     @Transactional
-    public <T> void delete(Class<T> domainClass, Object id) {
+    public void delete(Class<?> domainClass, Object id) {
         Assert.notNull(id, "id 不能为null");
-
-        T entity = findOne(domainClass, id);
-
+        Object entity = findOne(domainClass, id);
         if (entity == null) {
             return;
         }
-
         delete(entity);
     }
 
-    @Override
-    public <T> void delete(T entity) {
-        delete(Collections.singletonList(entity));
-    }
-
     /**
      * 删除数据
      *
@@ -103,21 +82,21 @@ public class EntityRepositoryImpl implements EntityRepository {
      */
     @Override
     @Transactional
-    public <T> void delete(T... entities) {
-        delete(Arrays.asList(entities));
-    }
-
-    /**
-     * 删除数据
-     *
-     * @param entities 数据表
-     */
-    @Override
-    @Transactional
-    public <T> void delete(Collection<T> entities) {
-        for (T entity : entities) {
+    public void delete(Object... entities) {
+        for(Object entity: entities){
             this.entityManager.remove(this.entityManager.contains(entity) ? entity : this.entityManager.merge(entity));
         }
+    }
+
+    /**
+     * 删除数据
+     *
+     * @param entities 数据表
+     */
+    @Override
+    @Transactional
+    public void delete(Iterable<?> entities) {
+        entities.forEach(this::delete);
     }
 
     @Override
@@ -195,7 +174,7 @@ public class EntityRepositoryImpl implements EntityRepository {
         Query query = entityManager.createQuery(select + " " + from);
         setQueryParams(query, params);
 
-        return null == pageable ? new PageImpl<>(query.getResultList()) : readPage(from, query, pageable, params);
+        return null == pageable ? new PageImpl<T>(query.getResultList()) : readPage(from, query, pageable, params);
     }
 
     /**
@@ -212,7 +191,7 @@ public class EntityRepositoryImpl implements EntityRepository {
         Query query = entityManager.createQuery(select + from);
         setQueryParams(query, params);
 
-        return null == pageable ? new PageImpl<>(query.getResultList()) : readPage(from, query, pageable, params);
+        return null == pageable ? new PageImpl<T>(query.getResultList()) : readPage(from, query, pageable, params);
     }
 
     @Override
@@ -452,7 +431,7 @@ public class EntityRepositoryImpl implements EntityRepository {
      */
     private Long executeCountQuery(TypedQuery<Long> query) {
         List<Long> totals = query.getResultList();
-        Long total = 0L;
+        long total = 0L;
 
         for (Long element : totals) {
             total += element == null ? 0 : element;

@@ -1,6 +1,6 @@
 description = 'jpa'
 
-version '1.0.12'
+version '1.0.13'
 
 apply from: 'https://onegit.com/enterprise/public/raw/master/publishing-with-source.gradle'
 

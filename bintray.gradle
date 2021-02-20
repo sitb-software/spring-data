@@ -1,0 +1,17 @@
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+    publications = ['maven']
+    publish = true
+    pkg {
+        repo = 'java-spring-data'
+        name = project.name
+        userOrg = 'aomi'
+        licenses = ['Apache-2.0']
+        publicDownloadNumbers = true
+        version {
+            name = project.version
+            desc = project.version
+        }
+    }
+}

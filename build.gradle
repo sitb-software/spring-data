@@ -1,3 +1,8 @@
+plugins {
+    id "io.franzbecker.gradle-lombok" version "2.2"
+    id "com.jfrog.bintray" version "1.8.5"
+}
+
 apply from: 'https://onegit.com/enterprise/public/raw/master/libraries.gradle'
 
 allprojects {
@@ -11,6 +16,7 @@ allprojects {
 }
 
 subprojects {
+    apply plugin: "com.jfrog.bintray"
     apply from: 'https://onegit.com/enterprise/public/raw/master/java.gradle'
     apply from: 'https://onegit.com/enterprise/public/raw/master/idea.gradle'
 }

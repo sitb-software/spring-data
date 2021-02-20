@@ -3,6 +3,7 @@ description = 'jpa'
 version '1.0.13'
 
 apply from: 'https://onegit.com/enterprise/public/raw/master/publishing-with-source.gradle'
+apply from: "$rootDir/bintray.gradle"
 
 dependencies {
     compileOnly lib.spring_data_jpa

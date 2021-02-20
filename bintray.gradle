@@ -4,8 +4,8 @@ bintray {
     publications = ['maven']
     publish = true
     pkg {
-        repo = 'java-spring-data'
-        name = project.name
+        repo = 'java'
+        name = "spring-data-$project.name"
         userOrg = 'aomi'
         licenses = ['Apache-2.0']
         publicDownloadNumbers = true

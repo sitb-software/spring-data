@@ -138,7 +138,7 @@ public class EntityRepositoryImpl implements EntityRepository {
      * @return 查询结果
      */
     @Override
-    public <T> List<T> query(String jpql, Object... params) {
+    public <T> List<T> query(String jpql, Object[] params) {
         Query query = entityManager.createQuery(jpql);
         setQueryParams(query, params);
         return query.getResultList();
@@ -483,7 +483,7 @@ public class EntityRepositoryImpl implements EntityRepository {
         return result;
     }
 
-    private void setQueryParams(Query query, Object... params) {
+    private void setQueryParams(Query query, Object[] params) {
         int i = 0;
         for (Object param : params) {
             query.setParameter(i++, param);

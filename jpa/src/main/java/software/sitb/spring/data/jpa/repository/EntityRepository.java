@@ -70,7 +70,7 @@ public interface EntityRepository {
      * @param <T>    结果类型
      * @return 查询结果
      */
-    <T> List<T> query(String jpql, Object... params);
+    <T> List<T> query(String jpql, Object[] params);
 
     /**
      * 根据传入的JPQL语句查询数据

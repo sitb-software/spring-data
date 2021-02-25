@@ -15,6 +15,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.*;
+import java.util.regex.Pattern;
 
 
 /**
@@ -27,32 +28,39 @@ public class EntityRepositoryImpl implements EntityRepository {
 
     public static final String COUNT_SELECT = "SELECT count(*) ";
 
-    /**
-     * 删除字段名
-     */
-    private final String deleteFieldName;
-
-    /**
-     * 标识数据已经删除的值
-     */
-    private final Object deleteFieldValue;
+    private static final Pattern WHERE_PATTERN = Pattern.compile("where", Pattern.CASE_INSENSITIVE);
 
     /**
      * 启用删除逻辑判断
      */
-    private final Boolean enabledDelete;
+    private final Boolean enabledSoftDelete;
+
+    /**
+     * 删除字段名
+     */
+    private final String softDeleteFieldName;
+
+    /**
+     * 标识未删除的数据值
+     */
+    private final Object notDeletedValue;
+
 
     @PersistenceContext
     private EntityManager entityManager;
 
     public EntityRepositoryImpl() {
-        this(false, "deleted", true);
+        this(false);
     }
 
-    public EntityRepositoryImpl(Boolean enabledDelete, String deleteFieldName, Object deleteFieldValue) {
-        this.enabledDelete = enabledDelete;
-        this.deleteFieldName = deleteFieldName;
-        this.deleteFieldValue = deleteFieldValue;
+    public EntityRepositoryImpl(Boolean enabledSoftDelete) {
+        this(enabledSoftDelete, "deleted", false);
+    }
+
+    public EntityRepositoryImpl(Boolean enabledSoftDelete, String softDeleteFieldName, Object notDeletedValue) {
+        this.enabledSoftDelete = enabledSoftDelete;
+        this.softDeleteFieldName = softDeleteFieldName;
+        this.notDeletedValue = notDeletedValue;
     }
 
     @Override
@@ -448,8 +456,8 @@ public class EntityRepositoryImpl implements EntityRepository {
         }
 
         // 排除删除的字段
-        if (this.enabledDelete) {
-            predicates.add(builder.equal(root.get(deleteFieldName), deleteFieldValue));
+        if (this.enabledSoftDelete) {
+            predicates.add(builder.equal(root.get(softDeleteFieldName), notDeletedValue));
         }
         if (predicates.size() > 0) {
             query.where(builder.and(predicates.toArray(new Predicate[0])));

@@ -1,6 +1,6 @@
 description = 'jpa'
 
-version '1.0.15'
+version '1.0.16'
 
 apply from: 'https://onegit.com/enterprise/public/raw/master/publishing-with-source.gradle'
 apply from: "$rootDir/bintray.gradle"

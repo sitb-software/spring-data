@@ -379,7 +379,12 @@ public class EntityRepositoryImpl implements EntityRepository {
         return this.entityManager;
     }
 
-    private <T> Page<T> readPage(String from, Query query, Pageable pageable, Object... params) {
+    private <T> Page<T> readPage(String from, Query query, Pageable pageable, Object[] params) {
+        Long total = executeCountQuery(getCountQuery(from, params));
+        return executeReadPage(query, pageable, total);
+    }
+
+    private <T> Page<T> readPage(String from, Query query, Pageable pageable, Map<String, Object> params) {
         Long total = executeCountQuery(getCountQuery(from, params));
         return executeReadPage(query, pageable, total);
     }
@@ -399,7 +404,13 @@ public class EntityRepositoryImpl implements EntityRepository {
         return new PageImpl<>(content, pageable, total);
     }
 
-    private TypedQuery<Long> getCountQuery(String from, Object... params) {
+    private TypedQuery<Long> getCountQuery(String from, Object[] params) {
+        TypedQuery<Long> query = entityManager.createQuery(COUNT_SELECT + from, Long.class);
+        setQueryParams(query, params);
+        return query;
+    }
+
+    private TypedQuery<Long> getCountQuery(String from, Map<String, Object> params) {
         TypedQuery<Long> query = entityManager.createQuery(COUNT_SELECT + from, Long.class);
         setQueryParams(query, params);
         return query;

@@ -204,7 +204,16 @@ public class EntityRepositoryImpl implements EntityRepository {
      */
     @Override
     public <T> Page<T> query(String select, String from, Pageable pageable, Object... params) {
-        Query query = entityManager.createQuery(select + " " + from);
+        return query(select, from, pageable, null, params);
+    }
+
+    @Override
+    public <T> Page<T> query(String select, String from, Pageable pageable, String alias, Object[] params) {
+        String fromSql = from;
+        if (null != pageable) {
+            fromSql = QueryUtils.applySorting(from, pageable.getSort(), alias);
+        }
+        Query query = entityManager.createQuery(select + " " + fromSql);
         setQueryParams(query, params);
 
         return null == pageable ? new PageImpl<T>(query.getResultList()) : readPage(from, query, pageable, params);
@@ -221,7 +230,17 @@ public class EntityRepositoryImpl implements EntityRepository {
      */
     @Override
     public <T> Page<T> query(String select, String from, Pageable pageable, Map<String, Object> params) {
-        Query query = entityManager.createQuery(select + from);
+        return query(select, from, pageable, params, null);
+    }
+
+    @Override
+    public <T> Page<T> query(String select, String from, Pageable pageable, Map<String, Object> params, String alias) {
+        String fromSql = from;
+        if (null != pageable) {
+            fromSql = QueryUtils.applySorting(from, pageable.getSort(), alias);
+        }
+
+        Query query = entityManager.createQuery(select + fromSql);
         setQueryParams(query, params);
 
         return null == pageable ? new PageImpl<T>(query.getResultList()) : readPage(from, query, pageable, params);

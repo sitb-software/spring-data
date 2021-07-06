@@ -1,6 +1,6 @@
 description = 'mongo'
 
-version '1.0.6'
+version '1.0.7'
 
 apply from: 'https://onegit.com/enterprise/public/raw/master/publishing-with-source.gradle'
 
